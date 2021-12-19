@@ -3,7 +3,9 @@ import axios from 'axios';
 /**
  * API url
  */
-const apiUrl = 'https://api.themoviedb.org/3';
+const apiUrl = 'https://apidev.laidmix.com/rest-api/v100';
+
+const API_KEY = process.env.API_KEY;
 
 /**
  * Image url
@@ -227,6 +229,7 @@ export const languages = [
  * Get list item
  */
 export function getListItem (type, query) {
+  console.log(lists)
   if (type === 'movie') {
     return lists.movie.find(list => list.query === query);
   } else if (type === 'tv') {
@@ -239,13 +242,7 @@ export function getListItem (type, query) {
  */
 export function getMovies (query, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/movie/${query}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`apiUrl`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
@@ -259,14 +256,8 @@ export function getMovies (query, page = 1) {
  */
 export function getMovie (id) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/movie/${id}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        append_to_response: 'videos,credits,images,external_ids,release_dates',
-        include_image_language: 'en',
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/single_details?id=${id}&type=movie&API-KEY=${API_KEY}`).then((response) => {
+      console.log(response.data)
       resolve(response.data);
     })
       .catch((error) => {
@@ -380,13 +371,7 @@ export function getTvShowEpisodes (id, season) {
  */
 export function getTrending (media, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/trending/${media}/week`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/${media}?API-KEY=${API_KEY}`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
@@ -394,6 +379,24 @@ export function getTrending (media, page = 1) {
       });
   });
 };
+
+
+/**
+ * Get content_home
+ */
+
+ //http://apidev.laidmix.com/rest-api/v100/home_content_for_android?API-KEY=${API_KEY}
+export function getHomeContent () {
+  return new Promise((resolve, reject) => {
+    axios.get(`${apiUrl}/home_content_for_android?API-KEY=${API_KEY}`).then((response) => {
+      resolve(response.data);
+    })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 
 /**
  * Discover media by genre

@@ -26,6 +26,7 @@ module.exports = {
     '~/plugins/lazyload.js',
     '~/plugins/filters.js',
     { src: '~/plugins/ga.js', ssr: false },
+    { src: '~plugins/vue-carousel', ssr: false }
   ],
 
   /*
@@ -85,25 +86,34 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    loaders: {
-      cssModules: {
-        camelCase: true,
-        localIdentName: '[local]_[hash:base64:5]',
-      },
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          loader: "css-loader",
+          options: {
+            import: true,
+          },
+        },
+      ],
     },
 
     /*
     ** Run ESLint on save
     */
-    extend (config, { isDev, isClient }) {
-      if (isDev && isClient) {
+
+    extend(config, ctx) {   
+      if (ctx.dev && ctx.isClient) {
         config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/,
+          enforce : 'pre',
+          test    : /\.(js|vue)$/,
+          loader  : 'eslint-loader',
+          exclude : /(node_modules)/,
+          options : {
+              fix : true
+          }
         });
       }
-    },
+    }
   },
 };

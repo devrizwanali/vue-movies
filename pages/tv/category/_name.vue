@@ -4,7 +4,7 @@
       :title="metaTitle" />
 
     <Listing
-      v-if="items && items.results.length"
+      v-if="items && items.length"
       :title="title"
       :items="items"
       :loading="loading"
@@ -48,13 +48,13 @@ export default {
     },
 
     title () {
-      return getListItem('tv', this.$route.params.name).title;
+      return "Trending TV Shows";
     },
   },
 
   async asyncData ({ params, error }) {
     try {
-      const items = params.name === 'trending' ? await getTrending('tv') : await getTvShows(params.name);
+      const items = params.name === 'trending' ? await getTrending('tvseries') : await getTvShows(params.name);
       return { items };
     } catch {
       error({ message: 'Page not found' });

@@ -1,6 +1,7 @@
 <template>
   <main class="main">
-    <Hero
+    find me here tv/category/index.vue
+    <!-- <Hero
       :item="featured" />
 
     <ListingCarousel
@@ -25,7 +26,7 @@
       v-if="airingToday && airingToday.results.length"
       :title="airingTodayTitle"
       :view-all-url="airingTodayUrl"
-      :items="airingToday" />
+      :items="airingToday" /> -->
   </main>
 </template>
 

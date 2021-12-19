@@ -17,8 +17,8 @@ export const name = {
 export const stars = {
   computed: {
     stars () {
-      if (this.item.vote_average) {
-        return this.item.vote_average * 10;
+      if (this.item.imdb_rating) {
+        return this.item.imdb_rating * 10;
       }
     },
   },
@@ -30,7 +30,7 @@ export const stars = {
 export const yearStart = {
   computed: {
     yearStart () {
-      const date = this.item.release_date ? this.item.release_date : this.item.first_air_date;
+      const date = this.item.release;
 
       if (date) {
         return date.split('-')[0];
@@ -74,12 +74,12 @@ export const cert = {
   computed: {
     cert () {
       // movie
-      if (this.item.release_dates) {
-        const releases = this.item.release_dates.results.find(release => release.iso_3166_1 === process.env.API_COUNTRY || release.iso_3166_1 === 'US');
+      if (this.item.releases) {
+        const releases = this.item.releases.results.find(release => release.iso_3166_1 === process.env.API_COUNTRY || release.iso_3166_1 === 'US');
 
         if (!releases) return null;
 
-        const item = releases.release_dates.find(date => date.certification !== '');
+        const item = releases.releases.find(date => date.certification !== '');
 
         if (item) return item.certification;
       // tv

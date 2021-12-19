@@ -1,6 +1,7 @@
 <template>
   <main class="main">
-    <Hero
+    rizwan
+   <!--  <Hero
       :item="featured" />
 
     <ListingCarousel
@@ -25,7 +26,7 @@
       v-if="nowPlaying && nowPlaying.results.length"
       :title="nowPlayingTitle"
       :view-all-url="nowPlayingUrl"
-      :items="nowPlaying" />
+      :items="nowPlaying" /> -->
   </main>
 </template>
 
@@ -86,13 +87,14 @@ export default {
 
   async asyncData ({ error }) {
     try {
-      const popular = await getMovies('popular');
-      const topRated = await getMovies('top_rated');
-      const upcoming = await getMovies('upcoming');
-      const nowPlaying = await getMovies('now_playing');
-      const featured = await getMovie(upcoming.results[0].id);
+      console.log('jjjjjjjjjjjjjjjj')
+      // const popular = await getMovies('popular');
+      // const topRated = await getMovies('top_rated');
+      // const upcoming = await getMovies('upcoming');
+      // const nowPlaying = await getMovies('now_playing');
+      // const featured = await getMovie(upcoming.results[0].id);
 
-      return { popular, topRated, upcoming, nowPlaying, featured };
+      // return { popular, topRated, upcoming, nowPlaying, featured };
     } catch {
       error({ statusCode: 504, message: 'Data not available' });
     }

@@ -33,8 +33,8 @@
         class="carousel__items"
         @scroll="scrollEvent">
         <Card
-          v-for="item in items.results"
-          :key="`card-${item.id}`"
+          v-for="item in items"
+          :key="`card-${item.videos_id}`"
           :item="item" />
 
         <div
@@ -90,19 +90,19 @@ export default {
     },
 
     items: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
 
   mounted () {
-    const count = this.viewAllUrl ? this.items.results.length + 1 : this.items.results.length;
+    const count = this.viewAllUrl ? this.items.length + 1 : this.items.length;
     this.calculateState(count);
   },
 
   methods: {
     resizeEvent () {
-      const count = this.viewAllUrl ? this.items.results.length + 1 : this.items.results.length;
+      const count = this.viewAllUrl ? this.items.length + 1 : this.items.length;
       this.calculateState(count);
     },
   },

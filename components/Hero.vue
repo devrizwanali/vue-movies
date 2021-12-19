@@ -109,16 +109,20 @@ export default {
 
   props: {
     item: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
 
   data () {
     return {
-      isSingle: this.item.id === this.$route.params.id,
+      isSingle: false,
       modalVisible: false,
     };
+  },
+
+  mounted()  {
+    console.log(this.item)
   },
 
   computed: {

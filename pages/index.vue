@@ -1,16 +1,24 @@
 <template>
   <main class="main">
-    <Hero
-      :item="featured" />
+    <carousel :per-page="1" :autoplay="true"  :perPage="2" :spacePadding="40" :loop="true">
+      <slide v-for="slide in featured" :key="slide.id">
+        <img
+          v-if="slide.image_link"
+          v-lazyload="slide.image_link"
+          :alt="slide.title"
+          style="width: -webkit-fill-available; margin-left: 30px; margin-right: 20px"
+        >
+      </slide>
+      </carousel>
 
     <ListingCarousel
-      v-if="trendingMovies && trendingMovies.results.length"
+      v-if="trendingMovies && trendingMovies.length"
       :title="trendingMoviesTitle"
       :view-all-url="trendingMoviesUrl"
       :items="trendingMovies" />
 
     <ListingCarousel
-      v-if="trendingTv && trendingTv.results.length"
+      v-if="trendingTv && trendingTv.length"
       :title="trendingTvTitle"
       :view-all-url="trendingTvUrl"
       :items="trendingTv" />
@@ -18,19 +26,17 @@
 </template>
 
 <script>
-import { getTrending, getMovie, getTvShow, getListItem } from '~/api';
-import Hero from '~/components/Hero';
+import { getTrending, getMovie, getTvShow, getListItem, getHomeContent } from '~/api';
 import ListingCarousel from '~/components/ListingCarousel';
 
 export default {
   components: {
-    Hero,
     ListingCarousel,
   },
 
   computed: {
     trendingMoviesTitle () {
-      return getListItem('movie', 'trending').title;
+      return 'Trending Movies'
     },
 
     trendingMoviesUrl () {
@@ -38,7 +44,7 @@ export default {
     },
 
     trendingTvTitle () {
-      return getListItem('tv', 'trending').title;
+      return 'Trending TV Shows'
     },
 
     trendingTvUrl () {
@@ -48,20 +54,12 @@ export default {
 
   async asyncData ({ error }) {
     try {
-      const trendingMovies = await getTrending('movie');
-      const trendingTv = await getTrending('tv');
-      let featured;
 
-      // feature a random item from movies or tv
-      const items = [...trendingMovies.results, ...trendingTv.results];
-      const randomItem = items[Math.floor(Math.random() * items.length)];
-      const media = randomItem.title ? 'movie' : 'tv';
+      const data = await getHomeContent();
+      const trendingMovies = data.latest_movies;
 
-      if (media === 'movie') {
-        featured = await getMovie(randomItem.id);
-      } else {
-        featured = await getTvShow(randomItem.id);
-      }
+      const trendingTv = data.latest_tvseries;
+      const featured = data.slider.slide
 
       return { trendingMovies, trendingTv, featured };
     } catch {

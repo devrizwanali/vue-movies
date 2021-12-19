@@ -2,11 +2,11 @@
   <div class="card">
     <nuxt-link
       class="card__link"
-      :to="{ name: `${media}-id`, params: { id: item.id } }">
+      :to="{ name: `${media}-id`, params: { id: item.videos_id } }">
       <div class="card__img">
         <img
-          v-if="poster"
-          v-lazyload="poster"
+          v-if="item.poster_url"
+          v-lazyload="item.poster_url"
           class="lazyload"
           :alt="name">
 
@@ -21,7 +21,7 @@
       </h2>
 
       <div
-        v-if="media !== 'person' && (stars || item.vote_average)"
+        v-if="(stars || item.imdb_rating)"
         class="card__rating">
         <div
           v-if="stars"
@@ -30,9 +30,9 @@
         </div>
 
         <div
-          v-if="item.vote_average"
+          v-if="item.imdb_rating"
           class="card__vote">
-          {{ item.vote_average | rating }}
+          {{ item.imdb_rating | rating }}
         </div>
       </div>
     </nuxt-link>
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import { apiImgUrl } from '~/api';
 import { name, stars } from '~/mixins/Details';
 
 export default {
@@ -55,25 +54,12 @@ export default {
       required: true,
     },
   },
-
   computed: {
-    poster () {
-      if (this.item.poster_path) {
-        return `${apiImgUrl}/w370_and_h556_bestv2${this.item.poster_path}`;
-      } else if (this.item.profile_path) {
-        return `${apiImgUrl}/w370_and_h556_bestv2${this.item.profile_path}`;
-      } else {
-        return false;
-      }
-    },
-
     media () {
-      if (this.item.media_type) {
-        return this.item.media_type;
-      } else if (this.item.name) {
-        return 'tv';
-      } else {
+      if (this.item.is_tvseries == "0") {
         return 'movie';
+      } else {
+        return 'tv';
       }
     },
   },

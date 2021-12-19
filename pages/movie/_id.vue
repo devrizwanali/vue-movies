@@ -1,6 +1,8 @@
 <template>
   <main class="main">
-    <TopNav
+    <h1>Rizwan</h1>
+
+   <!--  <TopNav
       :title="metaTitle" />
 
     <Hero
@@ -41,7 +43,7 @@
     <ListingCarousel
       v-if="recommended && recommended.results.length"
       title="More Like This"
-      :items="recommended" />
+      :items="recommended" /> -->
   </main>
 </template>
 
