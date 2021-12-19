@@ -311,14 +311,8 @@ export function getTvShows (query, page = 1) {
  */
 export function getTvShow (id) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/tv/${id}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        append_to_response: 'videos,credits,images,external_ids,content_ratings',
-        include_image_language: 'en',
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/single_details?id=${id}&type=tvseries&API-KEY=${API_KEY}`)
+    .then((response) => {
       resolve(response.data);
     })
       .catch((error) => {

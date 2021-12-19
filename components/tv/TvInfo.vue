@@ -3,8 +3,8 @@
     <div :class="$style.left">
       <div :class="$style.poster">
         <img
-          v-if="poster"
-          v-lazyload="poster"
+          v-if="item.poster_url"
+          v-lazyload="item.poster_url"
           class="lazyload"
           :alt="name">
 
@@ -17,114 +17,97 @@
 
     <div :class="$style.right">
       <div
-        v-if="item.overview"
+        v-if="item.description"
         :class="$style.overview">
         <h2 :class="$style.title">
           Storyline
         </h2>
 
-        <div v-html="item.overview" />
+        <div v-html="item.description" />
       </div>
 
       <div :class="$style.stats">
         <ul class="nolist">
-          <li v-if="item.first_air_date">
+          <li v-if="item.title">
             <div :class="$style.label">
-              First Aired
+              Name
             </div>
 
             <div :class="$style.value">
-              {{ item.first_air_date | fullDate }}
+              {{ item.title }}
             </div>
           </li>
-          <li v-if="item.last_air_date">
+          <li v-if="item.release">
             <div :class="$style.label">
-              Last Aired
+              Release
             </div>
 
             <div :class="$style.value">
-              {{ item.last_air_date | fullDate }}
+              {{ item.release }}
             </div>
           </li>
-          <li v-if="item.episode_run_time && item.episode_run_time.length">
+          <li v-if="item.runtime">
             <div :class="$style.label">
               Runtime
             </div>
 
             <div :class="$style.value">
-              {{ formatRunTime(item.episode_run_time) }}
+              {{ item.runtime }}
             </div>
           </li>
-          <li v-if="creators">
+          <li v-if="item.rating">
             <div :class="$style.label">
-              Creator
+              Rating
+            </div>
+
+            <div :class="$style.value">
+              {{ item.rating }}
+            </div>
+          </li>
+          <li v-if="item.director && item.director.length">
+            <div :class="$style.label">
+              Director
             </div>
 
             <div
               :class="$style.value"
-              v-html="creators" />
+              v-html="formatData(item.director)" />
           </li>
-          <li v-if="item.genres && item.genres.length">
+
+          <li v-if="item.network && item.network.length">
+            <div :class="$style.label">
+              Network
+            </div>
+
+            <div
+              :class="$style.value"
+              v-html="formatData(item.network)" />
+          </li>
+          <li v-if="item.genre && item.genre.length">
             <div :class="$style.label">
               Genre
             </div>
 
             <div
               :class="$style.value"
-              v-html="formatGenres(item.genres)" />
+              v-html="formatData(item.genre)" />
           </li>
-          <li v-if="item.number_of_seasons">
+          <li v-if="item.country && item.country.length">
             <div :class="$style.label">
-              Seasons
+              Country
             </div>
 
-            <div :class="$style.value">
-              {{ item.number_of_seasons }}
-            </div>
-          </li>
-          <li v-if="item.number_of_episodes">
-            <div :class="$style.label">
-              Episodes
-            </div>
-
-            <div :class="$style.value">
-              {{ item.number_of_episodes }}
-            </div>
-          </li>
-          <li v-if="item.status">
-            <div :class="$style.label">
-              Status
-            </div>
-
-            <div :class="$style.value">
-              {{ item.status }}
-            </div>
-          </li>
-          <li v-if="item.original_language">
-            <div :class="$style.label">
-              Language
-            </div>
-
-            <div :class="$style.value">
-              {{ item.original_language | fullLang }}
-            </div>
-          </li>
-          <li v-if="item.networks && item.networks.length">
-            <div :class="$style.label">
-              Network
-            </div>
-
-            <div :class="$style.value">
-              {{ item.networks | arrayToList }}
-            </div>
+            <div
+              :class="$style.value"
+              v-html="formatData(item.country)" />
           </li>
         </ul>
       </div>
 
-      <div :class="$style.external">
+     <!--  <div :class="$style.external">
         <ExternalLinks
           :links="item.external_ids" />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -150,17 +133,6 @@ export default {
       required: true,
     },
   },
-
-  computed: {
-    poster () {
-      if (this.item.poster_path) {
-        return `${apiImgUrl}/w370_and_h556_bestv2${this.item.poster_path}`;
-      } else {
-        return false;
-      }
-    },
-  },
-
   created () {
     if (this.item.homepage) {
       this.item.external_ids.homepage = this.item.homepage;
@@ -168,8 +140,8 @@ export default {
   },
 
   methods: {
-    formatGenres (genres) {
-      return genres.map(genre => `<a href="/genre/${genre.id}/tv">${genre.name}</a>`).join(', ');
+    formatData (data) {
+      return data.map(x => x.name).join(', ');
     },
 
     formatRunTime (times) {

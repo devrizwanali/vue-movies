@@ -100,6 +100,12 @@ export const cert = {
 export const trailer = {
   computed: {
     trailer () {
+      return [
+      {
+        name: 'ok',
+        src: ''
+      }]
+      
       let videos = this.item.videos.results;
 
       // if no videos, do nothing

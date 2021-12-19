@@ -19,7 +19,7 @@
 
     <div class="listing__items">
       <Card
-        v-for="item in items.results"
+        v-for="item in items"
         :key="`card-${item.id}`"
         :item="item" />
     </div>
@@ -60,7 +60,7 @@ export default {
     },
 
     items: {
-      type: Object,
+      type: Array,
       required: true,
     },
 

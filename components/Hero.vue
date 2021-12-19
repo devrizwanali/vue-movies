@@ -57,7 +57,7 @@
               <div :class="$style.info">
                 <span v-if="item.number_of_seasons">Season {{ item.number_of_seasons }}</span>
                 <span v-if="yearStart">{{ yearStart }}</span>
-                <span v-if="item.runtime">{{ item.runtime | runtime }}</span>
+                <span v-if="item.runtime">{{ item.runtime }}</span>
                 <span v-if="cert">Cert. {{ cert }}</span>
               </div>
             </div>
@@ -67,7 +67,7 @@
             </div>
 
             <button
-              v-if="trailer"
+              v-if="false"
               class="button button--icon"
               :class="$style.trailer"
               type="button"
