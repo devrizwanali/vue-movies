@@ -5,7 +5,7 @@
         v-if="poster"
         v-lazyload="poster"
         class="lazyload"
-        :alt="episode.name">
+        :alt="episode.episodes_name">
 
       <span v-else>
         <!-- eslint-disable-next-line -->
@@ -14,36 +14,38 @@
     </div>
 
     <h2 :class="$style.name">
-      <strong>E{{ episode.episode_number | numberWithDoubleDigits }}</strong> {{ episode.name }}
+      <strong>E{{ episodeNumber | numberWithDoubleDigits }}</strong> {{ episode.episodes_name }}
     </h2>
 
     <div :class="$style.overview">
-      {{ episode.overview | truncate(300) }}
+      {{ episode.episodes_description | truncate(300) }}
     </div>
 
-    <div
+   <!--  <div
       v-if="episode.air_date"
       :class="$style.aired">
       {{ episode.air_date | fullDate }}
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { apiImgUrl } from '~/api';
-
 export default {
   props: {
     episode: {
       type: Object,
       required: true,
     },
+    episodeNumber: {
+      type: Number,
+      required: true
+    }
   },
 
   computed: {
     poster () {
-      if (this.episode.still_path) {
-        return `${apiImgUrl}/w400${this.episode.still_path}`;
+      if (this.episode.image_url) {
+        return this.episode.image_url;
       } else {
         return null;
       }

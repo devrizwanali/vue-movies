@@ -3,8 +3,8 @@
     <div :class="$style.left">
       <div :class="$style.poster">
         <img
-          v-if="item.poster_url"
-          v-lazyload="item.poster_url"
+          v-if="item.thumbnail_url"
+          v-lazyload="item.thumbnail_url"
           class="lazyload"
           :alt="name">
 

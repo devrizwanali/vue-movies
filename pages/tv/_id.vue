@@ -16,7 +16,34 @@
 
       <Credits
         v-if="showCredits"
-        :people="item.cast" />
+        :people="item.cast_and_crew" />
+    </template>
+
+
+    <template v-if="activeMenu === 'episodes' && showEpisodes">
+      <Episodes
+        :number-of-seasons="item.season.length"
+        :item="item"
+         />
+    </template>
+
+    <template v-if="activeMenu === 'videos' && showVideos">
+      <Videos
+        :videos="item.videos.results" />
+    </template>
+
+    <template v-if="activeMenu === 'photos' && showImages">
+      <Images
+        v-if="item.images.backdrops.length"
+        title="Backdrops"
+        type="backdrop"
+        :images="item.images.backdrops" />
+
+      <Images
+        v-if="item.images.posters.length"
+        title="Posters"
+        type="poster"
+        :images="item.images.posters" />
     </template>
 
     <ListingCarousel
@@ -108,7 +135,7 @@ export default {
     },
 
     showEpisodes () {
-      return this.item.number_of_seasons;
+      return this.item.season;
     },
 
     showVideos () {

@@ -60,8 +60,8 @@ export const yearEnd = {
 export const backdrop = {
   computed: {
     backdrop () {
-      if (this.item.backdrop_path) {
-        return `${apiImgUrl}/original${this.item.backdrop_path}`;
+      if (this.item.poster_url) {
+        return this.item.poster_url;
       }
     },
   },

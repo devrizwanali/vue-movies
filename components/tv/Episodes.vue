@@ -24,8 +24,9 @@
       v-if="activeEpisodes"
       :class="$style.items">
       <EpisodesItem
-        v-for="episode in activeEpisodes"
-        :key="`episode-${episode.id}`"
+        v-for="(episode, index) in activeEpisodes"
+        :key="`episode-${episode.episodes_id}`"
+        :episodeNumber="index + 1"
         :episode="episode" />
     </div>
   </div>
@@ -45,11 +46,16 @@ export default {
       type: Number,
       required: true,
     },
+    item: {
+      type: Object,
+      required: true
+    }
+
   },
 
   data () {
     return {
-      activeSeason: this.numberOfSeasons,
+      activeSeason: null,
       activeEpisodes: null,
     };
   },
@@ -62,13 +68,14 @@ export default {
     seasons () {
       const seasons = [];
 
-      for (let index = 0; index < this.numberOfSeasons; index++) {
+      for (let index = 0; index < this.item.season.length; index++) {
         seasons.push({
-          season: index + 1,
-          episodes: null,
+          season: this.item.season[index].seasons_name,
+          episodes: this.item.season[index].episodes.length,
         });
       }
 
+      this.activeSeason = seasons[0].season;
       seasons.sort((a, b) => a.season > b.season ? -1 : 1);
 
       return seasons;
@@ -81,19 +88,13 @@ export default {
 
   methods: {
     getEpisodes () {
-      const season = this.seasons.find(season => season.season === this.activeSeason);
+      const season = this.item.season.find(season => season.seasons_name === this.activeSeason);
 
       // if we already have the episodes, just show them
       // else do api call
       if (season.episodes) {
         this.activeEpisodes = season.episodes;
-      } else {
-        // get episodes for a certain season
-        getTvShowEpisodes(this.$route.params.id, this.activeSeason).then((response) => {
-          season.episodes = response.episodes;
-          this.activeEpisodes = season.episodes;
-        });
-      }
+      } 
     },
   },
 };
