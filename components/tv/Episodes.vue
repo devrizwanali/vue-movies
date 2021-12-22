@@ -68,14 +68,14 @@ export default {
     seasons () {
       const seasons = [];
 
-      for (let index = 0; index < this.item.season.length; index++) {
+      for (let index = 0; index < this.item?.season?.length; index++) {
         seasons.push({
           season: this.item.season[index].seasons_name,
           episodes: this.item.season[index].episodes.length,
         });
       }
 
-      this.activeSeason = seasons[0].season;
+      this.activeSeason = seasons[0]?.season;
       seasons.sort((a, b) => a.season > b.season ? -1 : 1);
 
       return seasons;
@@ -88,13 +88,10 @@ export default {
 
   methods: {
     getEpisodes () {
-      const season = this.item.season.find(season => season.seasons_name === this.activeSeason);
+      const season = this.item?.season?.find(season => season.seasons_name === this.activeSeason);
 
-      // if we already have the episodes, just show them
-      // else do api call
-      if (season.episodes) {
+      if (season?.episodes)
         this.activeEpisodes = season.episodes;
-      } 
     },
   },
 };

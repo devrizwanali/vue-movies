@@ -41,7 +41,7 @@
 
             <div :class="$style.meta">
               <div
-                v-if="stars || item.vote_count"
+                v-if="stars || item.rating"
                 :class="$style.rating">
                 <div
                   v-if="stars"
@@ -49,21 +49,21 @@
                   <div :style="{ width: `${stars}%` }" />
                 </div>
 
-                <div v-if="item.vote_count > 0">
-                  {{ item.vote_count | numberWithCommas }} Reviews
+                <div v-if="item.rating > 0">
+                  {{ item.rating | numberWithCommas }} Reviews
                 </div>
               </div>
 
               <div :class="$style.info">
-                <span v-if="item.number_of_seasons">Season {{ item.number_of_seasons }}</span>
+                <span v-if="item.season.length">Season {{ item.season.length }}</span>
                 <span v-if="yearStart">{{ yearStart }}</span>
-                <span v-if="item.runtime">{{ item.runtime }}</span>
+                <span v-if="item.runtime">{{ item.runtime }} hours</span>
                 <span v-if="cert">Cert. {{ cert }}</span>
               </div>
             </div>
 
             <div :class="$style.desc">
-              {{ item.overview | truncate(200) }}
+              {{ item.description | truncate(200) }}
             </div>
 
             <button

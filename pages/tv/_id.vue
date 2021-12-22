@@ -135,7 +135,7 @@ export default {
     },
 
     showEpisodes () {
-      return this.item.season;
+      return this.item.season.length > 0;
     },
 
     showVideos () {
