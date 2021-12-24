@@ -1,6 +1,6 @@
 <template>
   <main class="main">
-    <carousel :per-page="1" :autoplay="true"  :perPage="2" :spacePadding="40" :loop="true">
+    <carousel :autoplay="false"  :perPageCustom="[[768, 2], [100, 1]]" :spacePadding="40" :loop="false">
       <slide v-for="slide in featured" :key="slide.id">
         <img
           v-if="slide.image_link"
@@ -81,3 +81,14 @@ export default {
   }
 };
 </script>
+
+<style>
+@media only screen and (max-width: 600px) {
+  slide > img: {
+    width: 100%;
+    background: red;
+  }
+
+}
+
+</style>
