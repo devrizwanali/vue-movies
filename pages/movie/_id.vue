@@ -1,8 +1,6 @@
 <template>
   <main class="main">
-    <h1>Rizwan</h1>
-
-   <!--  <TopNav
+    <TopNav
       :title="metaTitle" />
 
     <Hero
@@ -13,12 +11,20 @@
       @clicked="navClicked" />
 
     <template v-if="activeMenu === 'overview'">
-      <MovieInfo
+      <TvInfo
         :item="item" />
 
       <Credits
         v-if="showCredits"
-        :people="item.credits.cast" />
+        :people="item.cast_and_crew" />
+    </template>
+
+
+    <template v-if="activeMenu === 'episodes' && showEpisodes">
+      <Episodes
+        :number-of-seasons="item.season.length"
+        :item="item"
+         />
     </template>
 
     <template v-if="activeMenu === 'videos' && showVideos">
@@ -41,22 +47,23 @@
     </template>
 
     <ListingCarousel
-      v-if="recommended && recommended.results.length"
+      v-if="item.related_movie && item.related_movie.length"
       title="More Like This"
-      :items="recommended" /> -->
+      :items="item.related_movie" />
   </main>
 </template>
 
 <script>
-import { apiImgUrl, getMovie, getMovieRecommended } from '~/api';
-import { name, yearStart } from '~/mixins/Details';
+import { apiImgUrl, getTvShow, getRelatedTvSeries } from '~/api';
+import { name, yearStart, yearEnd } from '~/mixins/Details';
 import TopNav from '~/components/global/TopNav';
 import Hero from '~/components/Hero';
 import MediaNav from '~/components/MediaNav';
-import MovieInfo from '~/components/movie/MovieInfo';
+import TvInfo from '~/components/tv/TvInfo';
 import Videos from '~/components/Videos';
 import Images from '~/components/Images';
 import Credits from '~/components/Credits';
+import Episodes from '~/components/tv/Episodes';
 import ListingCarousel from '~/components/ListingCarousel';
 
 export default {
@@ -64,16 +71,18 @@ export default {
     TopNav,
     Hero,
     MediaNav,
-    MovieInfo,
+    TvInfo,
     Videos,
     Images,
     Credits,
+    Episodes,
     ListingCarousel,
   },
 
   mixins: [
     name,
     yearStart,
+    yearEnd,
   ],
 
   head () {
@@ -96,22 +105,21 @@ export default {
     return {
       menu: [],
       activeMenu: 'overview',
-      recommended: null,
     };
+  },
+
+  mounted () {
+    console.log(this.item.related_movie)
   },
 
   computed: {
     metaTitle () {
-      if (this.yearStart) {
-        return `${this.name} (${this.yearStart})`;
-      } else {
-        return `${this.name}`;
-      }
+      return this.item.title
     },
 
     metaDescription () {
-      if (this.item.overview) {
-        return this.truncate(this.item.overview, 200);
+      if (this.item.description) {
+        return this.truncate(this.item.description, 200);
       } else {
         return '';
       }
@@ -126,8 +134,12 @@ export default {
     },
 
     showCredits () {
-      const credits = this.item.credits;
-      return credits && credits.cast && credits.cast.length;
+      const credits = this.item.cast;
+      return credits && credits.length;
+    },
+
+    showEpisodes () {
+      return this.item.season.length > 0;
     },
 
     showVideos () {
@@ -143,10 +155,9 @@ export default {
 
   async asyncData ({ params, error }) {
     try {
-      const item = await getMovie(params.id);
-
+      const item = await getTvShow(params.id);
       if (item.adult) {
-        error({ message: 'This movie is not available' });
+        error({ message: 'This tv show is not available' });
       } else {
         return { item };
       }
@@ -157,7 +168,6 @@ export default {
 
   created () {
     this.createMenu();
-    this.initRecommended();
   },
 
   methods: {
@@ -171,6 +181,9 @@ export default {
       // overview
       menu.push('Overview');
 
+      // episodes
+      if (this.showEpisodes) menu.push('Episodes');
+
       // videos
       if (this.showVideos) menu.push('Videos');
 
@@ -182,15 +195,6 @@ export default {
 
     navClicked (label) {
       this.activeMenu = label;
-    },
-
-    initRecommended () {
-      // if recommended don't exist, retreive them
-      if (this.recommended !== null) return;
-
-      getMovieRecommended(this.$route.params.id).then((response) => {
-        this.recommended = response;
-      });
     },
   },
 };

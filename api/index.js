@@ -365,7 +365,7 @@ export function getTvShowEpisodes (id, season) {
  */
 export function getTrending (media, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/${media}?API-KEY=${API_KEY}`).then((response) => {
+    axios.get(`${apiUrl}/${media}?API-KEY=${API_KEY}&page=${page}`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {

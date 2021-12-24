@@ -4,9 +4,10 @@
       <slide v-for="slide in featured" :key="slide.id">
         <img
           v-if="slide.image_link"
-          v-lazyload="slide.image_link"
+          :src="slide.image_link"
           :alt="slide.title"
-          style="width: -webkit-fill-available; margin-left: 30px; margin-right: 20px"
+          @click="handleClick(slide)"
+          style="width: -webkit-fill-available; margin-left: 30px; margin-right: 20px; cursor: pointer;"
         >
       </slide>
       </carousel>
@@ -26,7 +27,7 @@
 </template>
 
 <script>
-import { getTrending, getMovie, getTvShow, getListItem, getHomeContent } from '~/api';
+import { getHomeContent } from '~/api';
 import ListingCarousel from '~/components/ListingCarousel';
 
 export default {
@@ -66,5 +67,14 @@ export default {
       error({ statusCode: 504, message: 'Data not available' });
     }
   },
+  methods: {
+    handleClick(slide) {
+      if(slide.action_type == 'tvseries') {
+        this.$router.push(`/tv/${slide.id}`)
+      } else {
+        this.$router.push(`/movie/${slide.id}`)
+      }
+    }
+  }
 };
 </script>
