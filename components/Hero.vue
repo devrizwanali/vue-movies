@@ -56,7 +56,9 @@
               </div>
 
               <div :class="$style.info">
-                <span v-if="item.season.length">Season {{ item.season.length }}</span>
+                <span v-if="item.is_tvseries=='1'">
+                  <span v-if="item.season.length">Season {{ item.season.length }}</span>
+                </span>
                 <span v-if="yearStart">{{ yearStart }}</span>
                 <span v-if="item.runtime">{{ item.runtime }} hours</span>
                 <span v-if="cert">Cert. {{ cert }}</span>
@@ -120,10 +122,6 @@ export default {
       isSingle: false,
       modalVisible: false,
     };
-  },
-
-  mounted()  {
-    console.log(this.item)
   },
 
   computed: {

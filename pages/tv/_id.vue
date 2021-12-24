@@ -151,7 +151,7 @@ export default {
 
   async asyncData ({ params, error }) {
     try {
-      const item = await getTvShow(params.id);
+      const item = await getTvShow(params.id, 'tvseries');
       if (item.adult) {
         error({ message: 'This tv show is not available' });
       } else {

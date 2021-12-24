@@ -309,9 +309,9 @@ export function getTvShows (query, page = 1) {
 /**
  * Get TV show (single)
  */
-export function getTvShow (id) {
+export function getTvShow (id, type) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/single_details?id=${id}&type=tvseries&API-KEY=${API_KEY}`)
+    axios.get(`${apiUrl}/single_details?id=${id}&type=${type}&API-KEY=${API_KEY}`)
     .then((response) => {
       resolve(response.data);
     })

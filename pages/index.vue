@@ -7,7 +7,10 @@
           :src="slide.image_link"
           :alt="slide.title"
           @click="handleClick(slide)"
-          style="width: -webkit-fill-available; margin-left: 30px; margin-right: 20px; cursor: pointer;"
+          style="width: -webkit-fill-available;
+                 margin-left: 30px;
+                 margin-right: 20px;
+                 cursor: pointer;"
         >
       </slide>
       </carousel>

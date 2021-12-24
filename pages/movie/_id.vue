@@ -19,31 +19,9 @@
         :people="item.cast_and_crew" />
     </template>
 
-
-    <template v-if="activeMenu === 'episodes' && showEpisodes">
-      <Episodes
-        :number-of-seasons="item.season.length"
-        :item="item"
-         />
-    </template>
-
     <template v-if="activeMenu === 'videos' && showVideos">
       <Videos
-        :videos="item.videos.results" />
-    </template>
-
-    <template v-if="activeMenu === 'photos' && showImages">
-      <Images
-        v-if="item.images.backdrops.length"
-        title="Backdrops"
-        type="backdrop"
-        :images="item.images.backdrops" />
-
-      <Images
-        v-if="item.images.posters.length"
-        title="Posters"
-        type="poster"
-        :images="item.images.posters" />
+        :videos="item.videos" />
     </template>
 
     <ListingCarousel
@@ -108,10 +86,6 @@ export default {
     };
   },
 
-  mounted () {
-    console.log(this.item.related_movie)
-  },
-
   computed: {
     metaTitle () {
       return this.item.title
@@ -138,29 +112,16 @@ export default {
       return credits && credits.length;
     },
 
-    showEpisodes () {
-      return this.item.season.length > 0;
-    },
-
     showVideos () {
       const videos = this.item.videos;
-      return videos && videos.results && videos.results.length;
-    },
-
-    showImages () {
-      const images = this.item.images;
-      return images && ((images.backdrops && images.backdrops.length) || (images.posters && images.posters.length));
+      return videos && videos.length;
     },
   },
 
   async asyncData ({ params, error }) {
     try {
-      const item = await getTvShow(params.id);
-      if (item.adult) {
-        error({ message: 'This tv show is not available' });
-      } else {
-        return { item };
-      }
+      const item = await getTvShow(params.id, 'movie');
+      return { item };
     } catch {
       error({ message: 'Page not found' });
     }
@@ -177,18 +138,10 @@ export default {
 
     createMenu () {
       const menu = [];
-
       // overview
       menu.push('Overview');
-
-      // episodes
-      if (this.showEpisodes) menu.push('Episodes');
-
       // videos
-      if (this.showVideos) menu.push('Videos');
-
-      // images
-      if (this.showImages) menu.push('Photos');
+      // if (this.showVideos) menu.push('Videos');
 
       this.menu = menu;
     },
