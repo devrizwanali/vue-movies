@@ -1,6 +1,6 @@
 <template>
   <main class="main">
-    <carousel :autoplay="false"  :perPageCustom="[[768, 2], [100, 1]]" :spacePadding="40" :loop="false">
+    <carousel :autoplay="true"  :perPageCustom="[[768, 2], [100, 1]]" :spacePadding="40" :loop="true">
       <slide v-for="slide in featured" :key="slide.id">
         <img
           v-if="slide.image_link"
