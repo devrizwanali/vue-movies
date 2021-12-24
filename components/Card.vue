@@ -53,13 +53,16 @@ export default {
       type: Object,
       required: true,
     },
+    isTv: {
+      type: Boolean
+    }
   },
   computed: {
     media () {
-      if (this.item.is_tvseries == "0") {
-        return 'movie';
-      } else {
+      if (this.isTv || this.item.is_tvseries == "1") {
         return 'tv';
+      } else {
+        return 'movie';
       }
     },
   },

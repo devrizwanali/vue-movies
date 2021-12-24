@@ -25,6 +25,7 @@
       v-if="trendingTv && trendingTv.length"
       :title="trendingTvTitle"
       :view-all-url="trendingTvUrl"
+      :is-tv="true"
       :items="trendingTv" />
   </main>
 </template>
