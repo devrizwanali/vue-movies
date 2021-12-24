@@ -66,6 +66,7 @@ export default {
     loadMore () {
       this.loading = true;
       this.page += 1;
+      console.log(this.page)
 
       getTrending('movies', this.page).then((response) => {
         this.items = this.items.concat(response);

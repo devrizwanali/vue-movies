@@ -20,7 +20,7 @@
     <div class="listing__items">
       <Card
         v-for="item in items"
-        :key="`card-${item.id}`"
+        :key="`card-${item.videos_id}`"
         :item="item" />
     </div>
 
@@ -86,13 +86,9 @@ export default {
 
   methods: {
     getScrollPosition: debounce(function () {
-      // if (this.items.page < this.items.total_pages) {
         const bottomOfWindow = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 600;
         if (bottomOfWindow && !this.loading) this.loadMore();
-      // } else {
-        // remove scroll event, no more pages to load
-        window.removeEventListener('scroll', this.getScrollPosition);
-      // }
+        if (this.items.length == 0) window.removeEventListener('scroll', this.getScrollPosition);
     }, 50),
 
     loadMore () {
