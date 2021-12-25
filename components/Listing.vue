@@ -21,6 +21,7 @@
       <Card
         v-for="item in items"
         :key="`card-${item.videos_id}`"
+        :is-tv="isTv"
         :item="item" />
     </div>
 
@@ -74,6 +75,10 @@ export default {
       required: false,
       default: false,
     },
+
+    isTv: {
+      type: Boolean
+    }
   },
 
   mounted () {

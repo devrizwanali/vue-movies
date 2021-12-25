@@ -6,6 +6,7 @@
     <Listing
       v-if="items && items.length"
       :title="title"
+      :is-tv="true"
       :items="items"
       :loading="loading"
       @loadMore="loadMore" />
@@ -54,7 +55,6 @@ export default {
   },
 
   async asyncData ({ params, error }) {
-    debugger;
     try {
       const items = await getTrending('tvseries');
       return { items };

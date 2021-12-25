@@ -8,6 +8,7 @@
       :title="title"
       :items="items"
       :loading="loading"
+      :is-tv="false"
       @loadMore="loadMore" />
   </main>
 </template>
