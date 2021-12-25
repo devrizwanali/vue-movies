@@ -45,7 +45,7 @@ export default {
     },
 
     trendingMoviesUrl () {
-      return { name: 'movie-category-name', params: { name: 'trending' } };
+      return { name: 'movies' };
     },
 
     trendingTvTitle () {
@@ -53,7 +53,7 @@ export default {
     },
 
     trendingTvUrl () {
-      return { name: 'tv-category-name', params: { name: 'trending' } };
+      return { name: 'tvseries' };
     },
   },
 

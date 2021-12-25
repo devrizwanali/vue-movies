@@ -60,9 +60,9 @@ export default {
   computed: {
     media () {
       if (this.isTv || this.item.is_tvseries == "1") {
-        return 'tv';
+        return 'tvseries';
       } else {
-        return 'movie';
+        return 'movies';
       }
     },
   },

@@ -12,7 +12,7 @@
       </li>
       <li>
         <nuxt-link
-          :to="{ name: 'movie-category-name', params: { name: 'trending' } }"
+          :to="{ name: 'movies' }"
           aria-label="Movies">
           <!-- eslint-disable-next-line -->
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round"><path d="M3.2 12.8h19.6v9.5c0 .5-.4.9-1 .9H4.1c-.5 0-1-.4-1-.9v-9.5"/><path d="M3.3 13.1l-2-4.4c-.2-.5 0-1 .5-1.2L18 .8c.5-.2 1.1 0 1.3.5l1.8 4-17.5 7.3"/><path d="M15 2.1l-.9 6M8 4.7l-1.2 6.6"/></g></svg>
@@ -20,7 +20,7 @@
       </li>
       <li>
         <nuxt-link
-          :to="{ name: 'tv-category-name', params: { name: 'trending' } }"
+          :to="{ name: 'tvseries' }"
           aria-label="TV Shows">
           <!-- eslint-disable-next-line -->
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-miterlimit="10"><path d="M21.4 23H2.6c-.9 0-1.6-.7-1.6-1.6V8.9c0-.9.7-1.6 1.6-1.6h18.9c.8 0 1.5.7 1.5 1.6v12.6c0 .8-.7 1.5-1.6 1.5zM6.4 1L12 7M17.6 1L12 7"/></g></svg>

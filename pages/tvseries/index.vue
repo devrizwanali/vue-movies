@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getTrending, getMovies, getListItem } from '~/api';
+import { getTrending, getTvShows, getListItem } from '~/api';
 import TopNav from '~/components/global/TopNav';
 import Listing from '~/components/Listing';
 
@@ -26,7 +26,7 @@ export default {
   data () {
     return {
       loading: false,
-      page: 1
+      page: 1,
     };
   },
 
@@ -45,17 +45,18 @@ export default {
 
   computed: {
     metaTitle () {
-     return this.title;
+      return this.title;
     },
 
     title () {
-      return "Trending movies";
+      return "Trending TV Shows";
     },
   },
 
   async asyncData ({ params, error }) {
+    debugger;
     try {
-      const items = params.name === 'trending' ? await getTrending('movies') : await getMovies(params.name);
+      const items = await getTrending('tvseries');
       return { items };
     } catch {
       error({ message: 'Page not found' });
@@ -66,9 +67,8 @@ export default {
     loadMore () {
       this.loading = true;
       this.page += 1;
-      console.log(this.page)
 
-      getTrending('movies', this.page).then((response) => {
+      getTrending('tvseries', this.page).then((response) => {
         this.items = this.items.concat(response);
         this.items.page = response.page;
         this.loading = false;
