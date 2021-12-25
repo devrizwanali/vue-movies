@@ -74,9 +74,9 @@ export default {
   methods: {
     handleClick(slide) {
       if(slide.action_type == 'tvseries') {
-        this.$router.push(`/tv/${slide.id}`)
+        this.$router.push(`/tvseries/${slide.id}`)
       } else {
-        this.$router.push(`/movie/${slide.id}`)
+        this.$router.push(`/movies/${slide.id}`)
       }
     }
   }
