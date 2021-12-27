@@ -1,7 +1,7 @@
 <template>
   <main class="main">
     <SearchResults
-      v-if="items && items.results.length"
+      v-if="items && (items.movies || items.tvseries)"
       :title="title"
       :items="items"
       :loading="loading"
@@ -22,6 +22,7 @@ export default {
   data () {
     return {
       loading: false,
+      page: 1
     };
   },
 
@@ -98,7 +99,7 @@ export default {
       const data = await search(this.query);
 
       // if no results, do nothing
-      if (!data.total_results) {
+      if (!data.movie || !data.tvseries) {
         this.items = null;
         return;
       }
@@ -109,10 +110,11 @@ export default {
 
     loadMore () {
       this.loading = true;
+      this.page +=1;
 
-      search(this.query, this.items.page + 1).then((response) => {
-        this.items.results = this.items.results.concat(response.results);
-        this.items.page = response.page;
+      search(this.query, this.page).then((response) => {
+        this.items.movie = this.items.movie.concat(response.movie);
+        this.items.tvseries = this.items.tvseries.concat(response.tvseries);
         this.loading = false;
       }).catch(() => {
         this.loading = false;

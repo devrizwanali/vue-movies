@@ -12,9 +12,18 @@
 
     <div class="listing__items">
       <Card
-        v-for="item in items.results"
-        :key="`card-${item.id}`"
-        :item="item" />
+        v-for="item in items.movie"
+        :key="`card-${item.videos_id}`"
+        :item="item"
+        :is-tv="false"
+      />
+
+      <Card
+        v-for="item in items.tvseries"
+        :key="`card-${item.videos_id}`"
+        :item="item"
+        :is-tv="true"
+      />
     </div>
 
     <div
@@ -45,7 +54,7 @@ export default {
     },
 
     items: {
-      type: Object,
+      type: Array,
       required: true,
     },
 
@@ -66,13 +75,9 @@ export default {
 
   methods: {
     getScrollPosition: debounce(function () {
-      if (this.items.page < this.items.total_pages) {
-        const bottomOfWindow = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 600;
-        if (bottomOfWindow && !this.loading) this.loadMore();
-      } else {
-        // remove scroll event, no more pages to load
-        window.removeEventListener('scroll', this.getScrollPosition);
-      }
+      const bottomOfWindow = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 600;
+      if (bottomOfWindow && !this.loading) this.loadMore();
+      if (this.items.length == 0) window.removeEventListener('scroll', this.getScrollPosition);
     }, 50),
 
     loadMore () {

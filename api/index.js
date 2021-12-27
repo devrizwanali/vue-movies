@@ -476,14 +476,7 @@ export function getPerson (id) {
  */
 export function search (query, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/search/multi`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        query,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/search?API-KEY=${API_KEY}&q=${query}&type=moviestvseries&page=${page}`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
