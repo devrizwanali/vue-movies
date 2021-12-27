@@ -110,7 +110,7 @@ export default {
 
     loadMore () {
       this.loading = true;
-      this.page +=1;
+      this.page += 1;
 
       search(this.query, this.page).then((response) => {
         this.items.movie = this.items.movie.concat(response.movie);

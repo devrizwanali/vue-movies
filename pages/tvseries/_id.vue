@@ -49,6 +49,7 @@
     <ListingCarousel
       v-if="item.related_tvseries && item.related_tvseries.length"
       title="More Like This"
+      is-tv="true"
       :items="item.related_tvseries" />
   </main>
 </template>

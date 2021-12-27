@@ -27,7 +27,6 @@
     </div>
 
     <div
-      v-if="items.page < items.total_pages"
       class="listing__nav">
       <div v-if="loading">
         <!-- eslint-disable-next-line -->
