@@ -27,7 +27,18 @@
         v-for="(episode, index) in activeEpisodes"
         :key="`episode-${episode.episodes_id}`"
         :episodeNumber="index + 1"
-        :episode="episode" />
+        :index="index"
+        :episode="episode"
+        @openModal="openModal"
+      />
+
+      <Modal
+        v-if="modalVisible"
+        :data="activeEpisodes"
+        type="iframe"
+        nav
+        :start-at="modalStartAt"
+        @close="closeModal" />
     </div>
   </div>
 </template>
@@ -35,10 +46,13 @@
 <script>
 import { getTvShowEpisodes } from '~/api';
 import EpisodesItem from '~/components/tv/EpisodesItem';
+import Modal from '~/components/Modal';
+
 
 export default {
   components: {
     EpisodesItem,
+    Modal
   },
 
   props: {
@@ -57,6 +71,7 @@ export default {
     return {
       activeSeason: null,
       activeEpisodes: null,
+      modalVisible: false
     };
   },
 
@@ -92,6 +107,16 @@ export default {
 
       if (season?.episodes)
         this.activeEpisodes = season.episodes;
+    },
+
+    openModal (index) {
+      this.modalStartAt = index;
+      this.modalVisible = true;
+    },
+
+    closeModal () {
+      this.modalVisible = false;
+      this.modalStartAt = 0;
     },
   },
 };
