@@ -74,18 +74,17 @@
               class="button button--icon"
               :class="$style.trailer"
               type="button"
+              @click="dialog = true"
               >
               <!-- eslint-disable-next-line -->
               <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M3 22v-20l18 10-18 10z"/></svg></span>
+              <span class="txt btn">Play</span>
 
               <div data-app>
                 <v-dialog
                   v-model="dialog"
                   width="500"
                   >
-                  <template v-slot:activator="{ on, attrs }">
-                    <span class="txt btn" v-bind="attrs" v-on="on">Play</span>
-                  </template>
                   <v-card>
                     <v-card-title class="text-h5">
                       Select movie
