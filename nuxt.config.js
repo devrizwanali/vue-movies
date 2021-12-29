@@ -26,7 +26,7 @@ module.exports = {
     '~/plugins/lazyload.js',
     '~/plugins/filters.js',
     { src: '~/plugins/ga.js', ssr: false },
-    { src: '~plugins/vue-carousel', ssr: false }
+    { src: '~plugins/vue-carousel', ssr: false },
   ],
 
   /*
@@ -70,6 +70,10 @@ module.exports = {
   loading: {
     color: '#2196f3',
   },
+
+    buildModules: [
+      '@nuxtjs/vuetify',
+    ],
 
   /*
    * Customize manifest.json

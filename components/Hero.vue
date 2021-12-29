@@ -60,7 +60,7 @@
                   <span v-if="item.season.length">Season {{ item.season.length }}</span>
                 </span>
                 <span v-if="yearStart">{{ yearStart }}</span>
-                <span v-if="item.runtime">{{ item.runtime }} hours</span>
+                <span v-if="item.runtime">{{ item.runtime }} {{ item.is_tvseries=="1" ? 'hours' : ''}}</span>
                 <span v-if="cert">Cert. {{ cert }}</span>
               </div>
             </div>
@@ -70,14 +70,42 @@
             </div>
 
             <button
-              v-if="false"
+              v-if="file_url"
               class="button button--icon"
               :class="$style.trailer"
               type="button"
-              @click="openModal">
+              >
               <!-- eslint-disable-next-line -->
               <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M3 22v-20l18 10-18 10z"/></svg></span>
-              <span class="txt">Watch Trailer</span>
+
+              <div data-app>
+                <v-dialog
+                  v-model="dialog"
+                  width="500"
+                  >
+                  <template v-slot:activator="{ on, attrs }">
+                    <span class="txt btn" v-bind="attrs" v-on="on">Play</span>
+                  </template>
+                  <v-card>
+                    <v-card-title class="text-h5">
+                      Select movie
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <template v-for="(video, index) in item.videos">
+                      <div>
+                        <v-btn
+                          class="label-button"
+                          large
+                          @click="handleVideoButton(index)"
+                        >
+                          {{video.label}}
+                        </v-btn>
+                      </div>
+                    </template>
+                    <v-divider></v-divider>
+                  </v-card>
+                </v-dialog>
+              </div>
             </button>
           </div>
         </transition>
@@ -86,19 +114,21 @@
 
     <Modal
       v-if="modalVisible"
-      :data="trailer"
+      :data="item.videos"
       type="iframe"
+      :start-at="modalStartAt"
       @close="closeModal" />
+
   </div>
 </template>
-
 <script>
 import { name, stars, yearStart, cert, backdrop, trailer } from '~/mixins/Details';
 import Modal from '~/components/Modal';
 
+
 export default {
   components: {
-    Modal,
+    Modal
   },
 
   mixins: [
@@ -121,6 +151,8 @@ export default {
     return {
       isSingle: false,
       modalVisible: false,
+      dialog: false,
+      modalStartAt: 0
     };
   },
 
@@ -128,13 +160,20 @@ export default {
     type () {
       return this.item.title ? 'movie' : 'tv';
     },
+
+    file_url () {
+      return this.item.is_tvseries == '0'
+    }
   },
 
   methods: {
     openModal () {
       this.modalVisible = true;
     },
-
+    handleVideoButton (index) {
+      this.modalVisible = true;
+      this.modalStartAt = index
+    },
     closeModal () {
       this.modalVisible = false;
     },
@@ -357,6 +396,13 @@ export default {
 </style>
 
 <style lang="scss">
+  
+
+.dg-view-wrapper {
+  color: black !important;
+}
+
+
 .hero-enter-active,
 .hero-leave-active {
   transition: transform .75s cubic-bezier(.4, .25, .3, 1), opacity .3s cubic-bezier(.4, .25, .3, 1);
@@ -366,6 +412,13 @@ export default {
 .hero-leave-to {
   opacity: 0;
   transform: translate3d(0, 2rem, 0);
+}
+
+.label-button {
+  background: blue !important;
+  color: white !important;
+  width: 90% !important;
+  margin-top: 15px !important;
 }
 
 .hero-enter-to,

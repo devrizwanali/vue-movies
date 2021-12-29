@@ -229,7 +229,6 @@ export const languages = [
  * Get list item
  */
 export function getListItem (type, query) {
-  console.log(lists)
   if (type === 'movie') {
     return lists.movie.find(list => list.query === query);
   } else if (type === 'tv') {
@@ -257,7 +256,6 @@ export function getMovies (query, page = 1) {
 export function getMovie (id) {
   return new Promise((resolve, reject) => {
     axios.get(`${apiUrl}/single_details?id=${id}&type=movie&API-KEY=${API_KEY}`).then((response) => {
-      console.log(response.data)
       resolve(response.data);
     })
       .catch((error) => {
