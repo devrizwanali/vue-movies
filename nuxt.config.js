@@ -30,13 +30,6 @@ module.exports = {
   ],
 
   /*
-  ** Global CSS
-  */
-  css: [
-    '@/assets/css/global.scss',
-  ],
-
-  /*
   ** Headers of the page
   */
   head: {
@@ -71,9 +64,13 @@ module.exports = {
     color: '#2196f3',
   },
 
-    buildModules: [
-      '@nuxtjs/vuetify',
-    ],
+  buildModules: [
+    '@nuxtjs/vuetify',
+  ],
+
+  vuetify: {
+    customVariables: ["~/assets/css/global.scss"],
+  },
 
   /*
    * Customize manifest.json

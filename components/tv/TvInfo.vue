@@ -99,7 +99,7 @@
 
             <div
               :class="$style.value"
-              v-html="formatData(item.country)" />
+              v-html="formatCountry(item.country)" />
           </li>
         </ul>
       </div>
@@ -142,6 +142,10 @@ export default {
   methods: {
     formatData (data) {
       return data.map(x => x.name).join(', ');
+    },
+
+    formatCountry (data) {
+      return data.map(country => `<a href="/country/${country.country_id}">${country.name}</a>`).join(', ');
     },
 
     formatRunTime (times) {

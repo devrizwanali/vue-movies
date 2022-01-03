@@ -264,43 +264,13 @@ export function getMovie (id) {
   });
 };
 
-/**
- * Get movie recommended (single)
- */
-export function getMovieRecommended (id, page = 1) {
+export function searchByCountry (id, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/movie/${id}/recommendations`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/content_by_country_id?id=${id}&API-KEY=${API_KEY}&page=${page}`).then((response) => {
       resolve(response.data);
-    })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
-
-/**
- * Get TV shows (listing)
- */
-export function getTvShows (query, page = 1) {
-  return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/tv/${query}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
-      resolve(response.data);
-    })
-      .catch((error) => {
-        reject(error);
-      });
+    }).catch((error) => {
+      reject(error);
+    });
   });
 };
 

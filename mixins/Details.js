@@ -19,6 +19,8 @@ export const stars = {
     stars () {
       if (this.item.imdb_rating) {
         return this.item.imdb_rating * 10;
+      } else if (this.item.rating) {
+        return this.item.rating * 10;
       }
     },
   },
