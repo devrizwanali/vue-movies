@@ -97,7 +97,7 @@
                           large
                           @click="handleVideoButton(index)"
                         >
-                          {{video.label}}
+                          <v-label>{{video.label}}</v-label>
                         </v-btn>
                       </div>
                     </template>
@@ -400,7 +400,11 @@ export default {
 .dg-view-wrapper {
   color: black !important;
 }
-
+.v-label {
+  color: white !important;
+  font-size: 28px;
+  cursor: pointer;
+}
 
 .hero-enter-active,
 .hero-leave-active {
