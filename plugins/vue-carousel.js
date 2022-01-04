@@ -1,4 +1,5 @@
 import Vue from 'vue'
-import VueCarousel from 'vue-carousel'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/css/swiper.css'
 
-Vue.use(VueCarousel)
+Vue.use(VueAwesomeSwiper)

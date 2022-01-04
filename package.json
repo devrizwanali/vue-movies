@@ -19,8 +19,9 @@
     "axios": "^0.18.0",
     "nuxt": "^2.0.0",
     "smoothscroll-polyfill": "^0.4.3",
+    "swiper": "5.x",
     "tiny-cookie": "^2.3.1",
-    "vue-carousel": "^0.18.0"
+    "vue-awesome-swiper": "^4.1.1"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
