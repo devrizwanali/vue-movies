@@ -56,9 +56,6 @@ export default {
     trendingTvUrl () {
       return { name: 'tvseries' };
     },
-      swiper() {
-        return this.$refs.mySwiper.$swiper
-      }
   },
 
   async asyncData ({ error }) {
@@ -82,6 +79,7 @@ export default {
          slidesPerView: 2,
           spaceBetween: 40,
           loop: true,
+          lazy: true,
           autoplay: {
             delay: 2500,
             disableOnInteraction: false
@@ -100,11 +98,6 @@ export default {
           }
         }
       }
-    },
-
-     mounted() {
-      console.log('Current Swiper instance object', this.swiper)
-      this.swiper.slideTo(3, 1000, false)
     },
   methods: {
     handleClick(slide) {
