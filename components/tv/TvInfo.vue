@@ -97,9 +97,14 @@
               Country
             </div>
 
-            <div
-              :class="$style.value"
-              v-html="formatCountry(item.country)" />
+            <div v-if="item.country">
+              <span v-for="coun in item.country">
+                 <nuxt-link :to="{ name: 'country-id', params: { id: coun.country_id } }">
+                  {{ coun.name }}
+                </nuxt-link>
+                <span v-if="coun.name"> &nbsp;</span>
+              </span>
+            </div>
           </li>
         </ul>
       </div>
@@ -143,11 +148,6 @@ export default {
     formatData (data) {
       return data.map(x => x.name).join(', ');
     },
-
-    formatCountry (data) {
-      return data.map(country => `<a href="/country/${country.country_id}">${country.name}</a>`).join(', ');
-    },
-
     formatRunTime (times) {
       return times.map(time => `${time}m`).join(', ');
     },
