@@ -4,11 +4,12 @@
       <div :class="$style.backdrop">
         <div>
           <button
-            v-if="trailer"
+            v-if="false"
             :class="$style.play"
             type="button"
             aria-label="Play Trailer"
-            @click="openModal">
+            @click="openModal"
+            >
             <!-- eslint-disable-next-line -->
             <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 55 55"><circle cx="27.5" cy="27.5" r="26.75" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.97 40.81L40.64 27.5 20.97 14.19v26.62z"/></svg>
           </button>
@@ -41,7 +42,7 @@
 
             <div :class="$style.meta">
               <div
-                v-if="stars || item.vote_count"
+                v-if="stars || item.rating"
                 :class="$style.rating">
                 <div
                   v-if="stars"
@@ -49,32 +50,61 @@
                   <div :style="{ width: `${stars}%` }" />
                 </div>
 
-                <div v-if="item.vote_count > 0">
-                  {{ item.vote_count | numberWithCommas }} Reviews
+                <div v-if="item.rating > 0">
+                  {{ item.rating | numberWithCommas }} Reviews
                 </div>
               </div>
 
               <div :class="$style.info">
-                <span v-if="item.number_of_seasons">Season {{ item.number_of_seasons }}</span>
+                <span v-if="item.is_tvseries=='1'">
+                  <span v-if="item.season.length">Season {{ item.season.length }}</span>
+                </span>
                 <span v-if="yearStart">{{ yearStart }}</span>
-                <span v-if="item.runtime">{{ item.runtime | runtime }}</span>
+                <span v-if="item.runtime">{{ item.runtime }} {{ item.is_tvseries=="1" ? 'hours' : ''}}</span>
                 <span v-if="cert">Cert. {{ cert }}</span>
               </div>
             </div>
 
             <div :class="$style.desc">
-              {{ item.overview | truncate(200) }}
+              {{ item.description | truncate(200) }}
             </div>
 
             <button
-              v-if="trailer"
+              v-if="file_url"
               class="button button--icon"
               :class="$style.trailer"
               type="button"
-              @click="openModal">
+              @click="dialog = true"
+              >
               <!-- eslint-disable-next-line -->
               <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M3 22v-20l18 10-18 10z"/></svg></span>
-              <span class="txt">Watch Trailer</span>
+              <span class="txt btn">Play</span>
+
+              <div data-app>
+                <v-dialog
+                  v-model="dialog"
+                  width="500"
+                  >
+                  <v-card>
+                    <v-card-title class="text-h5">
+                      Select movie
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <template v-for="(video, index) in item.videos">
+                      <div>
+                        <v-btn
+                          class="label-button"
+                          large
+                          @click="handleVideoButton(index)"
+                        >
+                          <v-label>{{video.label}}</v-label>
+                        </v-btn>
+                      </div>
+                    </template>
+                    <v-divider></v-divider>
+                  </v-card>
+                </v-dialog>
+              </div>
             </button>
           </div>
         </transition>
@@ -83,19 +113,21 @@
 
     <Modal
       v-if="modalVisible"
-      :data="trailer"
+      :data="item.videos"
       type="iframe"
+      :start-at="modalStartAt"
       @close="closeModal" />
+
   </div>
 </template>
-
 <script>
 import { name, stars, yearStart, cert, backdrop, trailer } from '~/mixins/Details';
 import Modal from '~/components/Modal';
 
+
 export default {
   components: {
-    Modal,
+    Modal
   },
 
   mixins: [
@@ -109,15 +141,17 @@ export default {
 
   props: {
     item: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
 
   data () {
     return {
-      isSingle: this.item.id === this.$route.params.id,
+      isSingle: false,
       modalVisible: false,
+      dialog: false,
+      modalStartAt: 0
     };
   },
 
@@ -125,13 +159,20 @@ export default {
     type () {
       return this.item.title ? 'movie' : 'tv';
     },
+
+    file_url () {
+      return this.item.is_tvseries == '0'
+    }
   },
 
   methods: {
     openModal () {
       this.modalVisible = true;
     },
-
+    handleVideoButton (index) {
+      this.modalVisible = true;
+      this.modalStartAt = index
+    },
     closeModal () {
       this.modalVisible = false;
     },
@@ -354,6 +395,17 @@ export default {
 </style>
 
 <style lang="scss">
+  
+
+.dg-view-wrapper {
+  color: black !important;
+}
+.v-label {
+  color: white !important;
+  font-size: 28px;
+  cursor: pointer;
+}
+
 .hero-enter-active,
 .hero-leave-active {
   transition: transform .75s cubic-bezier(.4, .25, .3, 1), opacity .3s cubic-bezier(.4, .25, .3, 1);
@@ -363,6 +415,13 @@ export default {
 .hero-leave-to {
   opacity: 0;
   transform: translate3d(0, 2rem, 0);
+}
+
+.label-button {
+  background: blue !important;
+  color: white !important;
+  width: 90% !important;
+  margin-top: 15px !important;
 }
 
 .hero-enter-to,

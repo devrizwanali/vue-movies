@@ -1,72 +1,137 @@
 <template>
   <main class="main">
-    <Hero
-      :item="featured" />
-
+    <swiper ref="mySwiper" 
+      class="swiper"
+      :auto-update="true"
+      :options="swiperOptions">
+        <swiper-slide v-for="slide in featured" :key="slide.id">
+        <img
+          v-if="slide.image_link"
+          :src="slide.image_link"
+          :alt="slide.title"
+          @click="handleClick(slide)"
+        >
+      </swiper-slide>
+    </swiper>
+    <div class="swiper-pagination-wrapper">
+     <div class="swiper-pagination pagination-custom" slot="pagination"></div>
+    </div>
     <ListingCarousel
-      v-if="trendingMovies && trendingMovies.results.length"
+      v-if="trendingMovies && trendingMovies.length"
       :title="trendingMoviesTitle"
       :view-all-url="trendingMoviesUrl"
       :items="trendingMovies" />
 
     <ListingCarousel
-      v-if="trendingTv && trendingTv.results.length"
+      v-if="trendingTv && trendingTv.length"
       :title="trendingTvTitle"
       :view-all-url="trendingTvUrl"
+      :is-tv="true"
       :items="trendingTv" />
   </main>
 </template>
 
 <script>
-import { getTrending, getMovie, getTvShow, getListItem } from '~/api';
-import Hero from '~/components/Hero';
+import { getHomeContent } from '~/api';
 import ListingCarousel from '~/components/ListingCarousel';
 
 export default {
   components: {
-    Hero,
     ListingCarousel,
   },
 
   computed: {
     trendingMoviesTitle () {
-      return getListItem('movie', 'trending').title;
+      return 'Trending Movies'
     },
 
     trendingMoviesUrl () {
-      return { name: 'movie-category-name', params: { name: 'trending' } };
+      return { name: 'movies' };
     },
 
     trendingTvTitle () {
-      return getListItem('tv', 'trending').title;
+      return 'Trending TV Shows'
     },
 
     trendingTvUrl () {
-      return { name: 'tv-category-name', params: { name: 'trending' } };
+      return { name: 'tvseries' };
     },
   },
 
   async asyncData ({ error }) {
     try {
-      const trendingMovies = await getTrending('movie');
-      const trendingTv = await getTrending('tv');
-      let featured;
 
-      // feature a random item from movies or tv
-      const items = [...trendingMovies.results, ...trendingTv.results];
-      const randomItem = items[Math.floor(Math.random() * items.length)];
-      const media = randomItem.title ? 'movie' : 'tv';
+      const data = await getHomeContent();
+      const trendingMovies = data.latest_movies;
 
-      if (media === 'movie') {
-        featured = await getMovie(randomItem.id);
-      } else {
-        featured = await getTvShow(randomItem.id);
-      }
+      const trendingTv = data.latest_tvseries;
+      const featured = data.slider.slide
 
       return { trendingMovies, trendingTv, featured };
     } catch {
       error({ statusCode: 504, message: 'Data not available' });
     }
   },
+
+  data() {
+      return {
+        swiperOptions: {
+         slidesPerView: 2,
+          spaceBetween: 40,
+          loop: true,
+          lazy: true,
+          autoplay: {
+            delay: 2500,
+            disableOnInteraction: false
+          },
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+          },
+          breakpoints: {
+            768: {
+              slidesPerView: 2,
+            },
+            320: {
+              slidesPerView: 1,
+            }
+          }
+        }
+      }
+    },
+  methods: {
+    handleClick(slide) {
+      if(slide.action_type == 'tvseries') {
+        this.$router.push(`/tvseries/${slide.action_id}`)
+      } else {
+        this.$router.push(`/movies/${slide.action_id}`)
+      }
+    }
+  }
 };
 </script>
+
+<style>
+.swiper-pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  background-color: white;
+  color: whtie;
+  opacity: 1;
+  margin-left: 10px;
+  border-radius: 100%;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: black;
+}
+</style>
+
+

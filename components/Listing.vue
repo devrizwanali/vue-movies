@@ -19,13 +19,13 @@
 
     <div class="listing__items">
       <Card
-        v-for="item in items.results"
-        :key="`card-${item.id}`"
+        v-for="item in items"
+        :key="`card-${item.videos_id}`"
+        :is-tv="isTv"
         :item="item" />
     </div>
 
     <div
-      v-if="items.page < items.total_pages"
       class="listing__nav">
       <div v-if="loading">
         <!-- eslint-disable-next-line -->
@@ -60,7 +60,7 @@ export default {
     },
 
     items: {
-      type: Object,
+      type: Array,
       required: true,
     },
 
@@ -75,14 +75,9 @@ export default {
       required: false,
       default: false,
     },
-  },
 
-  created () {
-    // if show exists, limit the results
-    if (this.show) {
-      this.items.results = this.items.results.splice(0, this.show);
-      this.items.total_pages = 1;
-      this.items.total_results = this.show;
+    isTv: {
+      type: Boolean
     }
   },
 
@@ -96,13 +91,9 @@ export default {
 
   methods: {
     getScrollPosition: debounce(function () {
-      if (this.items.page < this.items.total_pages) {
         const bottomOfWindow = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 600;
         if (bottomOfWindow && !this.loading) this.loadMore();
-      } else {
-        // remove scroll event, no more pages to load
-        window.removeEventListener('scroll', this.getScrollPosition);
-      }
+        if (this.items.length == 0) window.removeEventListener('scroll', this.getScrollPosition);
     }, 50),
 
     loadMore () {

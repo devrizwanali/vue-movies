@@ -1,52 +1,68 @@
 <template>
   <div :class="$style.item">
-    <div :class="$style.image">
-      <img
-        v-if="poster"
-        v-lazyload="poster"
-        class="lazyload"
-        :alt="episode.name">
+    <a
+      :class="$style.link"
+      :href="episode.file_url"
+      @click.prevent="handleVideo(index)">
 
-      <span v-else>
-        <!-- eslint-disable-next-line -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill-rule="evenodd" clip-rule="evenodd" fill="#999"><path d="M24 22h-24v-20h24v20zm-1-19h-22v18h22v-18zm-1 16h-19l4-7.492 3 3.048 5.013-7.556 6.987 12zm-11.848-2.865l-2.91-2.956-2.574 4.821h15.593l-5.303-9.108-4.806 7.243zm-4.652-11.135c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5-2.5-1.12-2.5-2.5 1.12-2.5 2.5-2.5zm0 1c.828 0 1.5.672 1.5 1.5s-.672 1.5-1.5 1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5z"/></svg>
-      </span>
-    </div>
+      <div :class="$style.image">
+        <img
+          v-if="poster"
+          v-lazyload="poster"
+          class="lazyload"
+          :alt="episode.name">
+
+        <div
+          v-if="episode.duration"
+          :class="$style.duration">
+          {{ formatDuration(episode.duration) }}
+        </div>
+
+        <div :class="$style.play">
+          <!-- eslint-disable-next-line -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 55 55"><circle cx="27.5" cy="27.5" r="26.75" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.97 40.81L40.64 27.5 20.97 14.19v26.62z"/></svg>
+        </div>
+      </div>
 
     <h2 :class="$style.name">
-      <strong>E{{ episode.episode_number | numberWithDoubleDigits }}</strong> {{ episode.name }}
+      <strong>E{{ episodeNumber | numberWithDoubleDigits }}</strong> {{ episode.episodes_name }}
     </h2>
 
     <div :class="$style.overview">
-      {{ episode.overview | truncate(300) }}
+      {{ episode.episodes_description | truncate(300) }}
     </div>
-
-    <div
-      v-if="episode.air_date"
-      :class="$style.aired">
-      {{ episode.air_date | fullDate }}
-    </div>
+    </a>
   </div>
 </template>
 
 <script>
-import { apiImgUrl } from '~/api';
-
 export default {
   props: {
     episode: {
       type: Object,
       required: true,
     },
+
+    index: {
+      type: Number,
+      required: true,
+    },
   },
 
   computed: {
     poster () {
-      if (this.episode.still_path) {
-        return `${apiImgUrl}/w400${this.episode.still_path}`;
+      if (this.episode.image_url) {
+        return this.episode.image_url;
       } else {
         return null;
       }
+    },
+  },
+
+  methods: {
+    handleVideo (index) {
+      // send the event up to the parent
+      this.$emit('openModal', index);
     },
   },
 };
@@ -57,9 +73,8 @@ export default {
 
 .item {
   display: flex;
-  flex-direction: column;
   width: 100%;
-  padding: 0.4rem;
+  padding: 1rem;
   margin-bottom: 2rem;
 
   @media (min-width: $breakpoint-xsmall) {
@@ -83,11 +98,16 @@ export default {
   }
 }
 
+.link {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .image {
   position: relative;
   height: 0;
-  padding-top: 56.25%;
-  margin-bottom: 1.5rem;
+  padding-bottom: 56.25%;
   overflow: hidden;
   background-color: $secondary-color;
 
@@ -105,26 +125,41 @@ export default {
     align-items: center;
     justify-content: center;
   }
-}
 
-.name {
-  margin-bottom: 1rem;
-  font-size: 1.6rem;
-  letter-spacing: $letter-spacing;
-
-  strong {
-    color: $primary-color;
+  &.lazyloaded .lazyload {
+    opacity: 0.8;
   }
 }
 
-.overview {
-  flex: 1 0 auto;
-  margin-bottom: 1rem;
-  font-size: 1.3rem;
-  color: $text-color;
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.aired {
+.duration {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0.4rem 1.2rem 0.2rem;
+  font-size: 1.3rem;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.name {
+  flex: 1 0 auto;
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  letter-spacing: $letter-spacing;
+
+  @media (min-width: $breakpoint-large) {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+}
+
+.type {
   font-size: 1.2rem;
   color: $text-color-grey;
   letter-spacing: $letter-spacing;

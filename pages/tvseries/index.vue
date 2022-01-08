@@ -4,8 +4,9 @@
       :title="metaTitle" />
 
     <Listing
-      v-if="items && items.results.length"
+      v-if="items && items.length"
       :title="title"
+      :is-tv="true"
       :items="items"
       :loading="loading"
       @loadMore="loadMore" />
@@ -26,6 +27,7 @@ export default {
   data () {
     return {
       loading: false,
+      page: 1,
     };
   },
 
@@ -48,13 +50,13 @@ export default {
     },
 
     title () {
-      return getListItem('tv', this.$route.params.name).title;
+      return "Trending TV Shows";
     },
   },
 
   async asyncData ({ params, error }) {
     try {
-      const items = params.name === 'trending' ? await getTrending('tv') : await getTvShows(params.name);
+      const items = await getTrending('tvseries');
       return { items };
     } catch {
       error({ message: 'Page not found' });
@@ -64,24 +66,15 @@ export default {
   methods: {
     loadMore () {
       this.loading = true;
+      this.page += 1;
 
-      if (this.$route.params.name === 'trending') {
-        getTrending('tv', this.items.page + 1).then((response) => {
-          this.items.results = this.items.results.concat(response.results);
-          this.items.page = response.page;
-          this.loading = false;
-        }).catch(() => {
-          this.loading = false;
-        });
-      } else {
-        getTvShows(this.$route.params.name, this.items.page + 1).then((response) => {
-          this.items.results = this.items.results.concat(response.results);
-          this.items.page = response.page;
-          this.loading = false;
-        }).catch(() => {
-          this.loading = false;
-        });
-      }
+      getTrending('tvseries', this.page).then((response) => {
+        this.items = this.items.concat(response);
+        this.items.page = response.page;
+        this.loading = false;
+      }).catch(() => {
+        this.loading = false;
+      });
     },
   },
 };

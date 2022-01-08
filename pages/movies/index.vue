@@ -4,10 +4,11 @@
       :title="metaTitle" />
 
     <Listing
-      v-if="items && items.results.length"
+      v-if="items && items.length"
       :title="title"
       :items="items"
       :loading="loading"
+      :is-tv="false"
       @loadMore="loadMore" />
   </main>
 </template>
@@ -26,6 +27,7 @@ export default {
   data () {
     return {
       loading: false,
+      page: 1
     };
   },
 
@@ -44,17 +46,17 @@ export default {
 
   computed: {
     metaTitle () {
-      return this.title;
+     return this.title;
     },
 
     title () {
-      return getListItem('movie', this.$route.params.name).title;
+      return "Trending movies";
     },
   },
 
   async asyncData ({ params, error }) {
     try {
-      const items = params.name === 'trending' ? await getTrending('movie') : await getMovies(params.name);
+      const items = await getTrending('movies');
       return { items };
     } catch {
       error({ message: 'Page not found' });
@@ -64,24 +66,15 @@ export default {
   methods: {
     loadMore () {
       this.loading = true;
+      this.page += 1;
 
-      if (this.$route.params.name === 'trending') {
-        getTrending('movie', this.items.page + 1).then((response) => {
-          this.items.results = this.items.results.concat(response.results);
-          this.items.page = response.page;
-          this.loading = false;
-        }).catch(() => {
-          this.loading = false;
-        });
-      } else {
-        getMovies(this.$route.params.name, this.items.page + 1).then((response) => {
-          this.items.results = this.items.results.concat(response.results);
-          this.items.page = response.page;
-          this.loading = false;
-        }).catch(() => {
-          this.loading = false;
-        });
-      }
+      getTrending('movies', this.page).then((response) => {
+        this.items = this.items.concat(response);
+        this.items.page = response.page;
+        this.loading = false;
+      }).catch(() => {
+        this.loading = false;
+      });
     },
   },
 };

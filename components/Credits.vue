@@ -25,7 +25,7 @@
         @scroll="scrollEvent">
         <CreditsItem
           v-for="person in people"
-          :key="`credit-${person.id}`"
+          :key="`credit-${person.star_id}`"
           :person="person" />
       </div>
 

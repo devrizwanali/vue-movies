@@ -25,7 +25,7 @@
           <div :class="`modal__${type}`">
             <iframe
               v-if="type === 'iframe' && activeItem"
-              :src="activeItem.src"
+              :src="activeItem.file_url"
               frameborder="0"
               allow="autoplay; encrypted-media"
               allowfullscreen />

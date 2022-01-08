@@ -16,12 +16,15 @@
 
       <Credits
         v-if="showCredits"
-        :people="item.credits.cast" />
+        :people="item.cast_and_crew" />
     </template>
+
 
     <template v-if="activeMenu === 'episodes' && showEpisodes">
       <Episodes
-        :number-of-seasons="item.number_of_seasons" />
+        :number-of-seasons="item.season.length"
+        :item="item"
+         />
     </template>
 
     <template v-if="activeMenu === 'videos' && showVideos">
@@ -44,14 +47,15 @@
     </template>
 
     <ListingCarousel
-      v-if="recommended && recommended.results.length"
+      v-if="item.related_tvseries && item.related_tvseries.length"
       title="More Like This"
-      :items="recommended" />
+      is-tv="true"
+      :items="item.related_tvseries" />
   </main>
 </template>
 
 <script>
-import { apiImgUrl, getTvShow, getTvShowRecommended } from '~/api';
+import { apiImgUrl, getTvShow, getRelatedTvSeries } from '~/api';
 import { name, yearStart, yearEnd } from '~/mixins/Details';
 import TopNav from '~/components/global/TopNav';
 import Hero from '~/components/Hero';
@@ -102,24 +106,17 @@ export default {
     return {
       menu: [],
       activeMenu: 'overview',
-      recommended: null,
     };
   },
 
   computed: {
     metaTitle () {
-      if (this.item.status === 'Ended' && this.yearStart && this.yearEnd) {
-        return `${this.name} (TV Series ${this.yearStart}-${this.yearEnd})`;
-      } else if (this.yearStart) {
-        return `${this.name} (TV Series ${this.yearStart}-)`;
-      } else {
-        return `${this.name} (TV Series)`;
-      }
+      return this.item.title
     },
 
     metaDescription () {
-      if (this.item.overview) {
-        return this.truncate(this.item.overview, 200);
+      if (this.item.description) {
+        return this.truncate(this.item.description, 200);
       } else {
         return '';
       }
@@ -134,12 +131,12 @@ export default {
     },
 
     showCredits () {
-      const credits = this.item.credits;
-      return credits && credits.cast && credits.cast.length;
+      const credits = this.item.cast;
+      return credits && credits.length;
     },
 
     showEpisodes () {
-      return this.item.number_of_seasons;
+      return this.item.season.length > 0;
     },
 
     showVideos () {
@@ -155,8 +152,7 @@ export default {
 
   async asyncData ({ params, error }) {
     try {
-      const item = await getTvShow(params.id);
-
+      const item = await getTvShow(params.id, 'tvseries');
       if (item.adult) {
         error({ message: 'This tv show is not available' });
       } else {
@@ -169,7 +165,6 @@ export default {
 
   created () {
     this.createMenu();
-    this.initRecommended();
   },
 
   methods: {
@@ -197,15 +192,6 @@ export default {
 
     navClicked (label) {
       this.activeMenu = label;
-    },
-
-    initRecommended () {
-      // if recommended don't exist, retreive them
-      if (this.recommended !== null) return;
-
-      getTvShowRecommended(this.$route.params.id).then((response) => {
-        this.recommended = response;
-      });
     },
   },
 };

@@ -3,7 +3,9 @@ import axios from 'axios';
 /**
  * API url
  */
-const apiUrl = 'https://api.themoviedb.org/3';
+const apiUrl = 'https://apidev.laidmix.com/rest-api/v100';
+
+const API_KEY = process.env.API_KEY;
 
 /**
  * Image url
@@ -239,13 +241,7 @@ export function getListItem (type, query) {
  */
 export function getMovies (query, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/movie/${query}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`apiUrl`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
@@ -259,14 +255,7 @@ export function getMovies (query, page = 1) {
  */
 export function getMovie (id) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/movie/${id}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        append_to_response: 'videos,credits,images,external_ids,release_dates',
-        include_image_language: 'en',
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/single_details?id=${id}&type=movie&API-KEY=${API_KEY}`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
@@ -275,59 +264,23 @@ export function getMovie (id) {
   });
 };
 
-/**
- * Get movie recommended (single)
- */
-export function getMovieRecommended (id, page = 1) {
+export function searchByCountry (id, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/movie/${id}/recommendations`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/content_by_country_id?id=${id}&API-KEY=${API_KEY}&page=${page}`).then((response) => {
       resolve(response.data);
-    })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
-
-/**
- * Get TV shows (listing)
- */
-export function getTvShows (query, page = 1) {
-  return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/tv/${query}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
-      resolve(response.data);
-    })
-      .catch((error) => {
-        reject(error);
-      });
+    }).catch((error) => {
+      reject(error);
+    });
   });
 };
 
 /**
  * Get TV show (single)
  */
-export function getTvShow (id) {
+export function getTvShow (id, type) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/tv/${id}`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        append_to_response: 'videos,credits,images,external_ids,content_ratings',
-        include_image_language: 'en',
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/single_details?id=${id}&type=${type}&API-KEY=${API_KEY}`)
+    .then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
@@ -380,13 +333,7 @@ export function getTvShowEpisodes (id, season) {
  */
 export function getTrending (media, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/trending/${media}/week`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/${media}?API-KEY=${API_KEY}&page=${page}`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
@@ -394,6 +341,24 @@ export function getTrending (media, page = 1) {
       });
   });
 };
+
+
+/**
+ * Get content_home
+ */
+
+ //http://apidev.laidmix.com/rest-api/v100/home_content_for_android?API-KEY=${API_KEY}
+export function getHomeContent () {
+  return new Promise((resolve, reject) => {
+    axios.get(`${apiUrl}/home_content_for_android?API-KEY=${API_KEY}`).then((response) => {
+      resolve(response.data);
+    })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 
 /**
  * Discover media by genre
@@ -479,14 +444,7 @@ export function getPerson (id) {
  */
 export function search (query, page = 1) {
   return new Promise((resolve, reject) => {
-    axios.get(`${apiUrl}/search/multi`, {
-      params: {
-        api_key: process.env.API_KEY,
-        language: process.env.API_LANG,
-        query,
-        page,
-      },
-    }).then((response) => {
+    axios.get(`${apiUrl}/search?API-KEY=${API_KEY}&q=${query}&type=moviestvseries&page=${page}`).then((response) => {
       resolve(response.data);
     })
       .catch((error) => {
